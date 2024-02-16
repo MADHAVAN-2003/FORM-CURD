@@ -1,23 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import AddUser from "./Components/AddUser";
+import Home from "./Components/Home";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import UpdateUser from "./Components/UpdateUser";
+import axios from "axios";
 
 function App() {
+  const baseURL = "http://localhost:8000/users";
+
+  async function getuser() {
+    try {
+      const response = await axios.get(baseURL);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+      return [];
+    }
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home user={getuser} />} />
+          <Route path="/add-user"  element={<AddUser />} />
+          <Route path="/edit-user/:id" element={<UpdateUser user={getuser}/>} />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
